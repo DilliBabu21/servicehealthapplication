@@ -72,7 +72,6 @@ function Login() {
 
       // Save the token to local storage
       localStorage.setItem("token", response.data.token);
-      // console.log(response.data.token)
       const tokenExpiration = Date.now() + 30 * 60 * 1000;
       localStorage.setItem('tokenExpiration', tokenExpiration);
       

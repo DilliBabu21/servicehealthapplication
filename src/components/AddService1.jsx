@@ -186,11 +186,6 @@ export default function AddService1() {
 
 
                         <div className="text-center">
-                            {/* <button className="btn btn-primary mx-2 ">Submit</button> */}
-
-                            {/* <Link className="btn btn-danger mx-2 rounded-pill" to="/">
-                                Cancel
-                            </Link> */}
                             <Button style={{
                                 backgroundColor: "#0072ff",
 

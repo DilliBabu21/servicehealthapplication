@@ -202,9 +202,6 @@ export default function Home() {
                       >
                         Check
                       </Button>
-                      {/* <Button className="contained" ><Link underline= to={`/editservice1/${service.id}`} >Edit</Link></Button> */}
-
-                      {/* <Link className="btn btn-dark mx-2" to={`/editservice1/${service.id}`} >Edit</Link> */}
                       <Button style={{
                         backgroundColor: "#21b6ae",
 

@@ -196,23 +196,7 @@ export default function EditService1() {
               ))}
             </div>
 
-
-
-
-
-            {/* <div className='mb-3'>
-                            <label htmlFor='payload' className='form-label'>
-                                Payload
-                            </label>
-                            <input type={"textarea"} className='form-control rounded-pill' value={payload} onChange={(e) => onInputChange(e)} placeholder='Eg "{\"Key\": \"Value\", \"key\": \"value\"}"' name='payload'  disabled={httpMethod === 'GET'} />
-                        </div> */}
             <div className="text-center">
-              {/* <button type="submit" className="btn btn-primary rounded-pill">
-              Submit
-            </button>
-            <Link className="btn btn-danger rounded-pill mx-2" to="/">
-              Cancel
-            </Link> */}
               <Button style={{
                 backgroundColor: "#0072ff",
 

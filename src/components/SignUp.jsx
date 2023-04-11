@@ -67,13 +67,6 @@ function SignUp() {
     setLoading(true);
 
     try {
-      // // Check if the username is already taken
-      // const response = await axios.get(`http://localhost:8878/api/v1/auth/username?username=${username}`);
-      // if (response.data.length > 0) {
-      //   setErrorMessage("Username already taken");
-      //   setLoading(false);
-      //   return;
-      // }
 
       // Register the user
       await axios.post("http://localhost:8878/api/v1/auth/register", {
