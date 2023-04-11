@@ -1,0 +1,51 @@
+
+
+th, td {
+    padding: 10px;
+    text-align: center;
+}
+
+thead {
+    background-color: #20283E;
+    color: white;
+}
+
+tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+.btn1{
+
+    margin-right: 10px;
+    
+}
+    .btn3{
+        margin-inline-end: auto;
+    }
+    /* span.badge[title="Service is UP"]:hover::before {
+        content: attr(title);
+        background-color: green;
+        color: white;
+        padding: 5px;
+        border-radius: 5px;
+        position: absolute;
+        z-index: 1;
+      }
+      
+      span.badge[title="Service is Currently Down"]:hover::before{
+        content: attr(title);
+        background-color: red;
+        color: white;
+        padding: 5px;
+        border-radius: 5px;
+        position: absolute;
+        z-index: 1;
+      }
+      
+      span.badge[title]:hover::after {
+        content: "attr(title)";
+        display: none;
+      } */
+      
+      
+
+  
