@@ -7,6 +7,7 @@ import AddService1 from './components/AddService1';
 import EditService1 from './components/EditService1';
 import SignUp from './components/SignUp';
 import Login from './components/Login';
+import ServiceUnavailablePage from './components/ServiceUnavailablePage';
 
 function App(){
 
@@ -24,6 +25,8 @@ function App(){
         <Route exact path='/home' element={<Home />}/>
         <Route exact path='/addService' element={<AddService1/>}/>
         <Route exact path='/editService1/:id' element={<EditService1/>}/>
+        <Route exact path='/ServiceUnavailablePage' element={<ServiceUnavailablePage/>}/>
+       
         </Routes>
       </Router>
       

@@ -9,8 +9,13 @@ import NetworkCheckIcon from '@mui/icons-material/NetworkCheck';
 import EditIcon from '@mui/icons-material/Edit';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import AddTaskIcon from '@mui/icons-material/AddTask';
+import Swal from 'sweetalert2';
+import { toast, ToastContainer } from 'react-toastify';
+
 
 export default function Home() {
+
+  const [isServiceUnavailable, setIsServiceUnavailable] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(5);
   const [services, setServices] = useState([]);
@@ -45,24 +50,29 @@ export default function Home() {
 
   const loadServices = async () => {
     try {
-      const result = await authAxios.get(
-        `services`
-      );
+      const result = await authAxios.get(`services`);
       setServices(result.data);
     } catch (error) {
-      console.log(error);
-      // try backup URL
       try {
-        const backupResult = await axios.get(
-          `http://localhost:9991/check/services`
-        );
+        const backupResult = await axios.get(`http://localhost:9991/check/services`);
+        // if (backupResult.data[0].fallbackMessage === "Service Unavailable") {
+        //   navigate(`/ServiceUnavailablePage`);
+        // } else {
         setServices(backupResult.data);
+
       } catch (backupError) {
         console.log(backupError);
-        setServices([]);
+        navigate(`/ServiceUnavailablePage`);
+        // setServices([]);
+
       }
     }
+
+
+
   };
+
+
 
   const handlePageChange = (result) => {
     setCurrentPage(result.target.value);
@@ -93,14 +103,58 @@ export default function Home() {
 
 
 
+  // useEffect(() => {
+  //    loadServices();
+  // }, [services]);
+
   useEffect(() => {
     loadServices();
-  }, [services]);
-  
+    // setTimeout(loadServices, 5000);
+
+  }, []);
+
 
   const deleteService = async (id) => {
-    await axios.delete(`http://localhost:8878/healthcheck/service/${id}`);
-    loadServices();
+
+    const swalWithBootstrapButtons = Swal.mixin({
+      customClass: {
+        confirmButton: 'btn btn-success',
+        cancelButton: 'btn btn-danger'
+      },
+      buttonsStyling: true
+    })
+
+    swalWithBootstrapButtons.fire({
+      title: 'Are you sure?',
+      text: "You won't be able to revert this!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, delete it!',
+      cancelButtonText: 'No, cancel!',
+      reverseButtons: true
+    })
+
+      .then(async (result) => {
+        if (result.isConfirmed) {
+          await axios.delete(`http://localhost:8878/healthcheck/service/${id}`);
+          swalWithBootstrapButtons.fire(
+            'Deleted!',
+            'Your file has been deleted.',
+            'success'
+          );
+          loadServices();
+        } else if (
+          result.dismiss === Swal.DismissReason.cancel
+        ) {
+          swalWithBootstrapButtons.fire(
+            'Cancelled',
+            'Your Service is safe :)',
+            'error'
+          );
+          // loadServices(); // load services after deletion
+        }
+      });
+
   };
 
   const sendEmail = async () => {
@@ -111,9 +165,30 @@ export default function Home() {
   };
 
   const checkAllServices = async () => {
-    await axios.get(`http://localhost:9991/check/service/checkall`);
-    loadServices();
-    console.log("Checked All Services");
+    try {
+      const response = await axios.get(`http://localhost:9991/check/service/checkall`);
+    
+      loadServices();
+
+      if (response.data === "Service unavailable") {
+        Swal.fire({
+          icon: 'error',
+          title: 'Oops...',
+          text: 'Service Unavailable try again later!',
+          footer: '<a href="">Why do I have this issue?</a>'
+        })
+      }
+    } catch (error) {
+      console.error(error);
+      Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: 'Service Unavailable try again later!',
+        footer: '<a href="">Why do I have this issue?</a>'
+      })
+
+    }
+
   };
 
   const checkService = async (id) => {
@@ -122,11 +197,28 @@ export default function Home() {
         `http://localhost:9991/check/service/check/${id}`
       );
       loadServices();
-      console.log(response.data);
-      
+      if (response.data.fallbackMessage === "Service Unavailable") {
+
+        Swal.fire({
+          icon: 'error',
+          title: 'Oops...',
+          text: 'Service Unavailable try again later!',
+          footer: '<a href="">Why do I have this issue?</a>'
+        })
+
+
+      }
+
     } catch (error) {
       loadServices();
       console.error(error);
+
+      Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: 'Service Unavailable try again later!',
+        footer: '<a href="">Why do I have this issue?</a>'
+      })
     }
   };
   var d = new Date();
@@ -136,6 +228,7 @@ export default function Home() {
   return (
 
     <div >
+
       <div className='container' style={{ display: 'flex', justifyContent: 'center' }}>
 
 
@@ -151,10 +244,12 @@ export default function Home() {
               }} variant="contained" startIcon={<AddTaskIcon />} className="mx-1" onClick={() => navigate(`/addService`)} >Add Service</Button>
             </div>
             <div className='btn1'>
+              
               <Button style={{
                 backgroundColor: "#e6b400",
 
               }} variant="contained" startIcon={<CheckCircleIcon />} color='success' onClick={checkAllServices}>Check All</Button>
+              
             </div>
             <div className='btn2'>
               <Button variant="contained" startIcon={<EmailIcon />} color='primary' onClick={sendEmail}>Send Email</Button>
@@ -232,15 +327,14 @@ export default function Home() {
                 <option value="15">15</option>
               </select>
             </div>
-          )}
 
-          {/* <div className="d-flex justify-content-center mt-3">
-                    <button className="btn btn-primary" onClick={sendEmail}>Send Email</button>
-                </div> */}
+          )}
         </div>
       </div>
 
+
     </div>
+
   )
 
 }    

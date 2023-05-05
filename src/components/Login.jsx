@@ -2,6 +2,7 @@ import { useState } from "react";
 import axios from "axios";
 import { Link, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
+import { GoogleLogin, useGoogleLogin } from '@react-oauth/google';
 
 const LoginContainer = styled.div`
   display: flex;
@@ -74,12 +75,37 @@ function Login() {
       localStorage.setItem("token", response.data.token);
       const tokenExpiration = Date.now() + 30 * 60 * 1000;
       localStorage.setItem('tokenExpiration', tokenExpiration);
-      
+
       navigate("/home");
     } catch (error) {
       setErrorMessage("Invalid username or password");
     }
   };
+
+  const login = useGoogleLogin({
+    onSuccess: async response => {
+      try {
+
+
+        const data = await axios.get("https://www.googleapis.com/oauth2/v3/userinfo", {
+          headers: {
+            "Authorization": `Bearer ${response.access_token}`
+          }
+
+        })
+
+        localStorage.setItem("token", response.access_token);
+      const tokenExpiration = Date.now() + 30 * 60 * 1000;
+      localStorage.setItem('tokenExpiration', tokenExpiration);
+
+      navigate("/home");
+
+      }
+      catch (err) {
+        console.log(err)
+      }
+    }
+  });
 
   return (
     <LoginContainer>
@@ -103,9 +129,17 @@ function Login() {
           />
         </label>
         <LoginButton type="submit">Login</LoginButton>
+        
+       
         <Link to="/auth/signup">Don't have an account? Sign up</Link>
+        <br/>
+        <GoogleLogin onSuccess={login}/>
+        
       </LoginForm>
+      
+    
     </LoginContainer>
+    
   );
 }
 

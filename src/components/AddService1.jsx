@@ -5,6 +5,7 @@ import { Alert, Button } from "@mui/material";
 import CancelIcon from '@mui/icons-material/Cancel';
 import { Select, MenuItem } from "@mui/material";
 import QueueIcon from '@mui/icons-material/Queue';
+import Swal from "sweetalert2";
 
 
 
@@ -72,9 +73,15 @@ export default function AddService1() {
 
             .then((res) => {
                 console.log(res.data);
-                alert("success")
-                navigate("/home")
+                Swal.fire({
+                    position: 'top',
+                    icon: 'success',
+                    title: 'Added Successfully',
+                    showConfirmButton: false,
+                    timer: 1000
+                  }) 
                 loadServices()
+                navigate("/home")
 
             })
             .catch((error) => {

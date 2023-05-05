@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import CancelIcon from '@mui/icons-material/Cancel';
 import QueueIcon from '@mui/icons-material/Queue';
+import Swal from "sweetalert2";
 
 export default function EditService1() {
   let navigate = useNavigate();
@@ -66,6 +67,13 @@ export default function EditService1() {
   const onSubmit = async (e) => {
     e.preventDefault();
     await axios.put(`http://localhost:8878/healthcheck/service/${id}`, services);
+    Swal.fire({
+      position: 'top',
+      icon: 'success',
+      title: 'Edited Successfully',
+      showConfirmButton: false,
+      timer: 1000
+    }) 
     navigate("/home");
   };
 
